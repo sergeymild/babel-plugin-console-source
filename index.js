@@ -1,42 +1,39 @@
 /**
  * Prepend file name and number as part of the babel process
  *
- * @author Peter Ingram
+ * @author Sergey Mild
  */
 
-module.exports = () => {
-    return {
-        visitor: {
-            CallExpression(path, state) {
+module.exports = (babel) => {
+  const { types: t } = babel;
 
-                const opts = state.opts;
+  return {
+    visitor: {
+      CallExpression(path, state) {
 
-                if (path.node.callee.object &&
-                    path.node.callee.object.name === 'console' &&
-                    path.node.callee.property.name !== 'table') {
+        const opts = state.opts;
 
-                    let file = state.file.opts.filename;
+        if (path.node.callee.object &&
+          path.node.callee.object.name === 'console' &&
+          path.node.callee.property.name !== 'table'
+        ) {
+          const isNodeModules = opts.skipNodeModules === true && state.file.opts.filename.includes('node_modules')
+          if (isNodeModules) return;
+          const args = path.node.arguments
+          if (args.length === 0) return
 
-                    if(typeof opts.resolveFile === 'function') {
-                        file = opts.resolveFile(file);
-                    } else if (!opts || opts.segments !== 0) {
-                        file = state.file.opts.filename.split(((opts.splitSegment) ? opts.splitSegment : '/'));
-                        let segs = file.slice(Math.max(file.length - opts.segments));
-                        file = segs.join('/');
-                    }
+          let file = state.file.opts.filename;
+          const segments = file.split("/")
+          file = segments[segments.length - 1]
 
-                    let value = `${file} (${path.node.loc.start.line}:${path.node.loc.start.column})`
+          let ffff = `${file} (${path.node.loc.start.line})`
+          console.log('[Index.CallExpression]', ffff)
 
-                    if(path.node.arguments[0].value !== value) {
-                        path.node.arguments.unshift({
-                            type: 'StringLiteral',
-                            value
-                        });
-                    }
-
-                }
-
-            }
+          if(args[0].value !== ffff) args.unshift(t.stringLiteral(ffff));
         }
-    };
+
+      },
+    },
+  };
 };
+
