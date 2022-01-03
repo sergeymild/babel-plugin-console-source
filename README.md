@@ -11,7 +11,7 @@ class App() {
 ↓ ↓ ↓ ↓ ↓ ↓
 class App() {
     constructor() {
-        console.log('app.js (3:8)', 'test')
+        console.log('app.js(3)', 'test')
     }
 }
 
@@ -24,7 +24,7 @@ class Test() {
 ↓ ↓ ↓ ↓ ↓ ↓
 class Test() {
     constructor() {
-        console.log('test.js (3:8)', 'test two')
+        console.log('test.js(3)', 'test two')
     }
 }
 ````
@@ -46,21 +46,8 @@ $ yarn add babel-plugin-console-source -D
         
         // You can pass in the following options
         ["console-source", {
-        
-            "segments": 1, // NOT REQUIRED
-            // 0 = full file path (Default)
-            // 1 = file name ONLY
-            // 2 = file name and last segment
-            
-            "splitSegment": '/' // How to split the path - NOT REQUIRED
-            // Default is / for Linux and OSX
-            // Windows users can use "\\" here if needed
-             
+            "skipNodeModules": true, // NOT REQUIRED
         }]
     ]
 }
 ````
-
-### Notes
-
-NPM Install: https://www.npmjs.com/package/babel-plugin-console-source
